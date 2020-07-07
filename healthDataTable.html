@@ -1,0 +1,973 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta content="" name="description" />
+    <meta content="webthemez" name="author" />
+
+    <title>疫情监测与服务系统</title>
+    <!-- Bootstrap Styles-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <!-- FontAwesome Styles-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <!-- Morris Chart Styles-->
+
+    <!-- Custom Styles-->
+    <link href="assets/css/custom-styles.css" rel="stylesheet" />
+    <!-- Google Fonts-->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <!-- TABLE STYLES-->
+    <link href="assets/js/dataTables/dataTables.bootstrap.css" rel="stylesheet" />
+    <link href="css/HubSpot-messenger-b1b1761/build/css/messenger.css" rel="stylesheet" />
+    <link href="css/HubSpot-messenger-b1b1761/build/css/messenger-theme-future.css" rel="stylesheet" />
+
+</head>
+
+<body>
+    <div id="wrapper">
+        <nav class="navbar navbar-default top-navbar" role="navigation">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand"><strong> 疫情监测与服务系统</strong></a>
+            </div>
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <!-- /.dropdown-messages -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <!-- /.dropdown-tasks -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <!-- /.dropdown-alerts -->
+                </li>
+                <!-- /.dropdown -->
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
+                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-user">
+                        <li><a href="form.html"><i class="fa fa-gear fa-fw"></i> Settings</a>
+                        </li>
+                        <li><a href="javascript:void(0)" onclick="logout()"><i class="fa fa-sign-out fa-fw"></i>
+                                Logout</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
+        </nav>
+        <!--/. NAV TOP  -->
+        <nav class="navbar-default navbar-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="main-menu">
+
+                    <li>
+                        <a href="healthDataTable.html"><i class="fa fa-dashboard"></i> 健康打卡数据</a>
+                    </li>
+
+                    <li>
+                        <a href="#"><i class="fa fa-sitemap"></i> 疫情可视化数据<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="confirmedEpidemicDataTable.html">确诊人数</a>
+                            </li>
+                            <li>
+                                <a href="deathEpidemicDataTable.html">死亡人数</a>
+                            </li>
+                            <li>
+                                <a href="recoveredEpidemicDataTable.html">治愈人数</a>
+                            </li>
+                            <li>
+                                <a href="Epidemic_US.html">Epidemic_US</a>
+                            </li>
+                            <li>
+                                <a href="Epidemic_Area.html">Epidemic_Area</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+
+            </div>
+
+        </nav>
+        <!-- /. NAV SIDE  -->
+        <div id="page-wrapper">
+            <div class="header">
+                <h1 class="page-header">
+                    健康打卡数据
+                </h1>
+
+
+            </div>
+
+            <div id="page-inner">
+                <!-- 增改删   ------------------------------------------------------------------->
+                <div class="btn-group operation">
+                    <button id="btn_add" type="button" class="btn bg-primary">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> 新增
+                    </button>
+                    <button id="btn_edit" type="button" class="btn bg-info">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span> 修改
+                    </button>
+                    <button id="btn_delete" type="button" class="btn btn-success">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> 删除
+                    </button>
+                </div>
+                <div class="modal fade" id="addHealthData" role="dialog">
+                    <!-- id = addHealthData   -->
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">添加用户打卡数据</h4>
+                            </div>
+                            <div id="addHealthDataModal" class="modal-body">
+                                <!-- id = addBookModal   -->
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label for="userID" class="col-sm-2 control-label">_id:*</label>
+                                        <!-- userID   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="userID" type="text"> <!-- id = userID   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="provinceName" class="col-sm-2 control-label">_openid:*</label>
+                                        <!-- provinceName   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="provinceName" type="text">
+                                            <!-- id = provinceName   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cityName" class="col-sm-2 control-label">realName:*</label>
+                                        <!-- cityName   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="cityName" type="text"><!-- cityName   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="isHealthy" class="col-sm-2 control-label">date:*(不能修改)</label>
+                                        <!-- isHealthy   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="isHealthy" type="text" readonly><!-- isHealthy   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="isRisky" class="col-sm-2 control-label">ZJUID:*</label>
+                                        <!-- isRisky   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="isRisky" type="text"><!-- isRisky   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="additem6" class="col-sm-2 control-label">今日是否确诊疑似:*</label>
+                                        <!-- isRisky   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="additem6" type="text"><!-- isRisky   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="additem7" class="col-sm-2 control-label">是否接触确诊:*</label>
+                                        <!-- isRisky   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="additem7" type="text"><!-- isRisky   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="additem8" class="col-sm-2 control-label">是否接触疑似:*</label>
+                                        <!-- isRisky   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="additem8" type="text"><!-- isRisky   -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="additem9" class="col-sm-2 control-label">是否在八市停留:*</label>
+                                        <!-- isRisky   -->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="additem9" type="text"><!-- isRisky   -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="center-block">
+                                    <button id="cancelAdd" type="button" class="btn btn-default"
+                                        data-dismiss="modal">取消</button>
+                                    <button id="addHealthDataInfo" type="button" class="btn btn-success"
+                                        data-dismiss="modal">保存</button>
+                                    <!--id = addBooksInfo-->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---->
+                <div class="modal fade" id="editHealthDataInfo" role="dialog">
+                    <!--editBookInfo-->
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">修改用户健康打卡内容</h4>
+                            </div>
+                            <div id="editHealthDataModal" class="modal-body">
+                                <!--editBookModal-->
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <label for="edituserID" class="col-sm-2 control-label">_id:*(不能修改)</label>
+                                        <!--editBookName-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="edituserID" type="text" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editprovinceName"
+                                            class="col-sm-2 control-label">_openid:*(不能修改)</label>
+                                        <!--editBookAuthor-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="editprovinceName" type="text" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editcityName" class="col-sm-2 control-label">realName:*</label>
+                                        <!--editBookPrice-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="editcityName" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editisHealthy" class="col-sm-2 control-label">date:*(不能修改)</label>
+                                        <!--editBookPublish-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="editisHealthy" type="text" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editisRisky" class="col-sm-2 control-label">ZJUID:*</label>
+                                        <!--editBookISBN-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="editisRisky" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edititem6" class="col-sm-2 control-label">今日是否确诊疑似:*</label>
+                                        <!--editBookName-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="edititem6" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edititem7" class="col-sm-2 control-label">是否接触确诊:*</label>
+                                        <!--editBookName-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="edititem7" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edititem8" class="col-sm-2 control-label">是否接触疑似:*</label>
+                                        <!--editBookName-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="edititem8" type="text">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="edititem9" class="col-sm-2 control-label">是否在八市停留:*</label>
+                                        <!--editBookName-->
+                                        <div class="col-sm-10">
+                                            <input class="form-control" id="edititem9" type="text">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="center-block">
+                                    <button id="cancelEdit" type="button" class="btn btn-default"
+                                        data-dismiss="modal">取消</button>
+                                    <button id="saveEdit" type="button" class="btn btn-success"
+                                        data-dismiss="modal">保存</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!---->
+                <div class="modal fade" id="deleteHealthData" role="dialog">
+                    <!--deleteBook-->
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">确认要删除吗？</h4>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button id="delete" type="button" class="btn btn-danger"
+                                    data-dismiss="modal">删除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 增改删   ------------------------------------------------------------------->
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- Advanced Tables -->
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+
+                            </div>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-bordered table-hover"
+                                        id="dataTables-example">
+                                        <thead>
+                                            <tr>
+                                                <th>_id</th>
+                                                <th>_openid</th>
+                                                <th>realName</th>
+                                                <th>date</th>
+                                                <th>ZJUID</th>
+                                                <th>今日是否确诊疑似</th>
+                                                <th>是否接触确诊</th>
+                                                <th>是否接触疑似</th>
+                                                <th>是否在八市停留</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!--End Advanced Tables -->
+                        <button id="btn_export" type="button" class="btn btn-default btn-lg">
+                            <span class="glyphicon glyphicon-file" aria-hidden="true"></span> 导出json数据
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <footer class="tm-footer row tm-mt-small">
+                <div class="col-12 font-weight-light">
+                    <p class="text-center text-white mb-0 px-4 small">
+                        Copyright &copy; <b>2020</b> All rights reserved.
+
+                        Design: <a rel="nofollow noopener" class="tm-footer-link">浙江大学地理信息科学1701</a>
+                    </p>
+                </div>
+            </footer>
+        </div>
+        <!-- /. PAGE INNER  -->
+    </div>
+    <!-- /. PAGE WRAPPER  -->
+    <!-- /. WRAPPER  -->
+    <!-- JS Scripts-->
+    <!-- jQuery Js -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+    <!-- Bootstrap Js -->
+    <script src="assets/js/bootstrap.min.js"></script>
+    <!-- Metis Menu Js -->
+    <script src="assets/js/jquery.metisMenu.js"></script>
+    <!-- DATA TABLE SCRIPTS 
+    <script src="assets/js/dataTables/jquery.dataTables.js"></script>  -->
+    <script src="https://cdn.bootcss.com/datatables/1.10.16/js/jquery.dataTables.js"></script>
+    <script src="assets/js/dataTables/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" src="js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="assets/js/jquery.tabletojson.js"></script>
+    <script src="css/HubSpot-messenger-b1b1761/build/js/messenger.js"></script>
+
+    <script type="text/javascript">
+        $._messengerDefaults = {
+            extraClasses: 'messenger-fixed messenger-on-top'
+        }
+    </script>
+
+    <script>
+        if (window.localStorage) {
+            var token = localStorage.value;
+            console.log(token);
+        }
+        else {
+            alert("浏览器不支持！");
+        }
+
+        //$(document).ready(function () {
+        var table;
+        var datat = [];
+        $(document).ready(function () {
+            refreshTable();
+
+        });
+        function refreshTable() {
+            $.ajax({
+                url: "http://localhost:8000/healthdata",
+                type: 'post',
+                //headers: { "X-CSRFtoken":$.cookie("csrftoken")},
+                headers: { 'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val() },
+                //dataType:'json',
+                /*data:{
+                    "env":"emss1-7y7xp",
+                    "file_path":"test_export",
+                    "file_type":1,
+                    "query":"db.collection(\'HealthData\').get()"},*/
+                data: JSON.stringify({
+                    'token': token
+                }),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    console.log(data);
+                    if (data.status == '0') {
+                        alert("请重新登录！");
+                        window.location.href = "login.html";
+                        return false;
+                    }
+                    else {
+                        datat = [];
+                        //alert("0");
+                        //var datat = []
+                        //var jsonobj = eval( '(' + data + ')' );
+                        var res = data.results;
+                        // console.log(data);
+                        // console.log(data[1]);
+                        var jsonobj;// = eval( '(' + data[1] + ')' );
+                        //console.log(jsonobj);
+                        //console.log(jsonobj['_id']);
+                        for (var i = 0; i < data.length; i++) {
+                            //if (res[i].countryEnglishName != null) {
+                            jsonobj = eval('(' + data[i] + ')');
+                            console.log(typeof (jsonobj['ZJUID']));
+                            var ssid;
+                            if (typeof (jsonobj['ZJUID']) != "undefined") {
+                                ssid = jsonobj['ZJUID'];
+                            }
+                            else if (typeof (jsonobj['studentID']) != "undefined") {
+                                ssid = jsonobj['studentID'];
+                            }
+                            else {
+                                ssid = "undefined";
+                            }
+
+                            //datat.push([jsonobj['_id'], jsonobj['_openid'], jsonobj['realName'], jsonobj['date'], jsonobj['studentID'], jsonobj['jrsfqzys'], jsonobj['sfjcqz'], jsonobj['sfjcys'], jsonobj['jrdqtlqk']]);// data[i].date, data[i].studentID, data[i].tw]);
+                            datat.push([jsonobj['_id'], jsonobj['_openid'], jsonobj['realName'], jsonobj['date'], ssid, jsonobj['jrsfqzys'], jsonobj['sfjcqz'], jsonobj['sfjcys'], jsonobj['jrdqtlqk']]);
+                            // console.log(datat)
+                            //}
+                        }
+                        //console.log(data);
+                        //console.log(result);
+                        //请求成功后执行的代码
+                        table = $('#dataTables-example').DataTable({
+                            destroy: true,
+                            data: datat
+                        }); ///!
+
+
+                        $('#dataTables-example tbody').on('click', 'tr', function () {
+                            if ($(this).hasClass('selected')) {
+                                $(this).removeClass('selected');
+                            }
+                            else {
+                                table.$('tr.selected').removeClass('selected');
+                                $(this).addClass('selected');
+                            }
+                        });
+
+                        //====export JSON
+                        $('#btn_export').click(function () {
+                            //把表格转化成json数据
+                            var tabletojson = $('table').tableToJSON(); // Convert the table into a javascript object
+                            alert(JSON.stringify(tabletojson));
+                            // console.log(tabletojson);
+                            // console.log(JSON.stringify(tabletojson));
+
+                            // 下载文件方法
+                            var funDownload = function (content, filename) {
+                                var eleLink = document.createElement('a');
+                                eleLink.download = filename;
+                                eleLink.style.display = 'none';
+                                // 字符内容转变成blob地址
+                                var blob = new Blob([content]);
+                                eleLink.href = URL.createObjectURL(blob);
+                                // 触发点击
+                                document.body.appendChild(eleLink);
+                                eleLink.click();
+                                // 然后移除
+                                document.body.removeChild(eleLink);
+                            };
+
+                            if ('download' in document.createElement('a')) {
+                                funDownload(JSON.stringify(tabletojson), 'HealthData.json');
+                                //alert('ke');
+                            } else {
+                                alert('浏览器不支持');
+                            }
+                        });
+                    }
+                },
+                error: function (result) {
+                    alert("连接失败");
+                    //失败后执行的代码
+                }
+            });
+        }
+
+
+        //====add
+        $("#cancelAdd").on('click', function () {
+            console.log('cancelAdd');
+            $("#addHealthDataModal").find('input').val('')
+        })
+        $("#addHealthDataInfo").on('click', function () {
+            console.log('addHealthDataInfo');
+            if (datat.length) {
+                if ($("#addHealthDataModal").find('input').val() !== '') {
+                    var userID = $("#userID").val()
+                    var provinceName = $("#provinceName").val()
+                    var cityName = $("#cityName").val()
+                    var isHealthy = $("#isHealthy").val()//date
+                    var isRisky = $("#isRisky").val()//studentsid
+                    var additem6 = $("#additem6").val()
+                    var additem7 = $("#additem7").val()
+                    var additem8 = $("#additem8").val()
+                    var additem9 = $("#additem9").val()
+                    var addHealthDataInfos = [].concat(userID, provinceName, cityName, isHealthy, isRisky, additem6, additem7, additem8, additem9);
+                    console.log(addHealthDataInfos);
+                    var flag = true;
+                    if (flag) {
+                        for (var i = 0; i < addHealthDataInfos.length; i++) {
+                            if (addHealthDataInfos[i] == '') {
+                                alert('内容不能为空');
+                                flag = false;
+                                $.globalMessenger().post({
+                                    message: "操作失败",//提示信息
+                                    type: 'error',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+                                break;
+                            }
+                            else {
+                                var date = new Date(isHealthy);
+                                console.log(Date.parse(date));//不是日期时输出NAN
+                                if (isNaN(isHealthy) && Date.parse(date)) {
+                                    //是日期/时间
+                                    var sid = new Number(isRisky);
+                                    if (isRisky[0] == '-' || isNaN(sid) == true) {
+                                        flag = false;
+                                        $.globalMessenger().post({
+                                            message: "学号格式错误",//提示信息
+                                            type: 'error',//消息类型。error、info、success
+                                            hideAfter: 2,//多长时间消失
+                                            showCloseButton: true,//是否显示关闭按钮
+                                            hideOnNavigate: true //是否隐藏导航
+                                        });
+                                        break;
+                                    }
+                                    else {
+                                        if (additem6 != '0' && additem6 != '1') {
+                                            flag = false;
+                                            $.globalMessenger().post({
+                                                message: "【今日是否疑似确诊】项格式错误",//提示信息
+                                                type: 'error',//消息类型。error、info、success
+                                                hideAfter: 2,//多长时间消失
+                                                showCloseButton: true,//是否显示关闭按钮
+                                                hideOnNavigate: true //是否隐藏导航
+                                            });
+                                            break;
+                                        }
+                                        else if (additem7 != '0' && additem7 != '1') {
+                                            flag = false;
+                                            $.globalMessenger().post({
+                                                message: "【是否接触确诊】项格式错误",//提示信息
+                                                type: 'error',//消息类型。error、info、success
+                                                hideAfter: 2,//多长时间消失
+                                                showCloseButton: true,//是否显示关闭按钮
+                                                hideOnNavigate: true //是否隐藏导航
+                                            });
+                                            break;
+                                        }
+                                        else if (additem8 != '0' && additem8 != '1') {
+                                            flag = false;
+                                            $.globalMessenger().post({
+                                                message: "【是否接触疑似】项格式错误",//提示信息
+                                                type: 'error',//消息类型。error、info、success
+                                                hideAfter: 2,//多长时间消失
+                                                showCloseButton: true,//是否显示关闭按钮
+                                                hideOnNavigate: true //是否隐藏导航
+                                            });
+                                            break;
+                                        }
+                                        else if (additem9 != '0' && additem9 != '1' && additem9 != '2' && additem9 != '3' && additem9 != '4' && additem9 != '5' && additem9 != '6' && additem9 != '7' && additem9 != '8') {
+                                            flag = false;
+                                            $.globalMessenger().post({
+                                                message: "【是否在八市停留】项格式错误",//提示信息
+                                                type: 'error',//消息类型。error、info、success
+                                                hideAfter: 2,//多长时间消失
+                                                showCloseButton: true,//是否显示关闭按钮
+                                                hideOnNavigate: true //是否隐藏导航
+                                            });
+                                            break;
+                                        }
+                                    }
+                                } else {
+                                    flag = false;
+                                    $.globalMessenger().post({
+                                        message: "日期格式错误",//提示信息
+                                        type: 'error',//消息类型。error、info、success
+                                        hideAfter: 2,//多长时间消失
+                                        showCloseButton: true,//是否显示关闭按钮
+                                        hideOnNavigate: true //是否隐藏导航
+                                    });
+                                    break;
+                                }
+
+                            }
+                        }
+                    }
+
+                    if (flag) {
+                        //var addquery = "db.collection(\"HealthData\").add({data: [{_id: \"" + userID + "\",_openid: \"" + provinceName + "\",realName: \"" + cityName + "\",date: \"" + isHealthy + "\",studentID: \"" + isRisky + "\",jrsfqzys: " + additem6 + ",sfjcqz: " + additem7 + ",sfjcys: " + additem8 +",jrdqtlqk: " + additem9 + "}]})";
+                        var addquery = "db.collection(\"HealthData\").add({data: [{_id: \"" + userID + "\",_openid: \"" + provinceName + "\",realName: \"" + cityName + "\",date: \"" + isHealthy + "\",ZJUID: \"" + isRisky + "\",jrsfqzys: " + additem6 + ",sfjcqz: " + additem7 + ",sfjcys: " + additem8 + ",jrdqtlqk: " + additem9 + "}]})";
+                        console.log(addquery);
+
+                        $.ajax({
+                            url: "http://localhost:8000/addhealthdata",
+                            type: 'post',
+                            //headers: { "X-CSRFtoken":$.cookie("csrftoken")},
+                            headers: { 'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val() },
+                            data: JSON.stringify({
+                                //'csrfmiddlewaretoken': $("[name='csrfmiddlewaretoken']").val(),
+                                addquery: addquery,
+                                'token': token
+                            }),
+                            contentType: "application/x-www-form-urlencoded",
+                            success: function (data) {
+                                if (data.status == '0') {
+                                    alert("请重新登录！");
+                                    window.location.href = "login.html";
+                                    return false;
+                                }
+                                else {
+                                    if (data.errcode == 0) {
+                                        table.row.add([userID, provinceName, cityName, isHealthy, isRisky, additem6, additem7, additem8, additem9]).draw();
+                                        $("#addHealthDataModal").find('input').val('')
+                                        $.globalMessenger().post({
+                                            message: "操作成功",//提示信息
+                                            type: 'success',//消息类型。error、info、success
+                                            hideAfter: 2,//多长时间消失
+                                            showCloseButton: true,//是否显示关闭按钮
+                                            hideOnNavigate: true //是否隐藏导航
+                                        });
+                                    }
+                                    else {
+                                        $.globalMessenger().post({
+                                            message: "操作失败",//提示信息
+                                            type: 'error',//消息类型。error、info、success
+                                            hideAfter: 2,//多长时间消失
+                                            showCloseButton: true,//是否显示关闭按钮
+                                            hideOnNavigate: true //是否隐藏导航
+                                        });
+                                    }
+                                }
+                            }
+                        });
+
+
+
+                    }
+                }
+                //} 
+                else {
+                    alert('内容不能为空');
+                    $.globalMessenger().post({
+                        message: "操作失败",//提示信息
+                        type: 'error',//消息类型。error、info、success
+                        hideAfter: 2,//多长时间消失
+                        showCloseButton: true,//是否显示关闭按钮
+                        hideOnNavigate: true //是否隐藏导航
+                    });
+                }
+            }
+        })
+        $("#addHealthDataInfo").click();
+
+
+        function formatDate(d) {
+            var D = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09']
+            with (d || new Date) return [
+                [getFullYear(), D[getMonth() + 1] || getMonth() + 1, D[getDate()] || getDate()].join('-')
+            ].join(' ');
+        }
+
+        $("#btn_add").click(function () {
+            console.log('add');
+            $("#addHealthData").modal()
+            var inputs = $("#addHealthDataModal").find('input')
+            var d = new Date()
+            $(inputs[3]).val(formatDate())
+        });
+        //====add
+        //====delete
+        $('#btn_delete').click(function () {
+            //console.log(table.rows('.selected').data()[0][0]);
+            if (table.rows('.selected').data().length) {
+                $("#deleteHealthData").modal()
+            } else {
+                alert('请选择项目');
+            }
+        });
+        $('#delete').click(function () {
+            var deleteid = table.rows('.selected').data()[0][0];
+            var deletequery = "db.collection(\"HealthData\").doc('" + deleteid + "').remove()";///需修改
+            console.log(deletequery);
+            $.ajax({
+                url: "http://localhost:8000/deletehealthdata",
+                type: 'post',
+                //headers: { "X-CSRFtoken":$.cookie("csrftoken")},
+                headers: { 'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val() },
+                data: JSON.stringify({
+                    //'csrfmiddlewaretoken': $("[name='csrfmiddlewaretoken']").val(),
+                    deletequery: deletequery,
+                    'token': token
+                }),
+                contentType: "application/x-www-form-urlencoded",
+                success: function (data) {
+                    if (data.status == '0') {
+                        alert("请重新登录！");
+                        window.location.href = "login.html";
+                        return false;
+                    }
+                    else {
+                        if (data.errcode == 0) {
+                            table.row('.selected').remove().draw(false);
+                            $.globalMessenger().post({
+                                message: "操作成功",//提示信息
+                                type: 'success',//消息类型。error、info、success
+                                hideAfter: 2,//多长时间消失
+                                showCloseButton: true,//是否显示关闭按钮
+                                hideOnNavigate: true //是否隐藏导航
+                            });
+                        }
+                        else {
+                            $.globalMessenger().post({
+                                message: "操作失败",//提示信息
+                                type: 'error',//消息类型。error、info、success
+                                hideAfter: 2,//多长时间消失
+                                showCloseButton: true,//是否显示关闭按钮
+                                hideOnNavigate: true //是否隐藏导航
+                            });
+                        }
+                    }
+                }
+            });
+
+        });
+
+        //====edit
+        $('#btn_edit').click(function () {
+            console.log('edit');
+            if (table.rows('.selected').data().length) {
+                $("#editHealthDataInfo").modal()
+                var rowData = table.rows('.selected').data()[0];
+                var inputs = $("#editHealthDataModal").find('input')
+                for (var i = 0; i < inputs.length; i++) {
+                    //$(inputs[i]).val(rowData[i + 1])
+                    $(inputs[i]).val(rowData[i])
+                }
+            } else {
+                alert('请选择项目');
+            }
+        });
+        $("#saveEdit").click(function () {
+            var edituserID = $("#edituserID").val()
+            var editprovinceName = $("#editprovinceName").val()
+            var editcityName = $("#editcityName").val()
+            var editisHealthy = $("#editisHealthy").val()
+            var editisRisky = $("#editisRisky").val()
+            var edititem6 = $("#edititem6").val()
+            var edititem7 = $("#edititem7").val()
+            var edititem8 = $("#edititem8").val()
+            var edititem9 = $("#edititem9").val()
+            var newRowData = [].concat(edituserID, editprovinceName, editcityName, editisHealthy, editisRisky, edititem6, edititem7, edititem8, edititem9);
+            console.log(newRowData);
+            var tds = Array.prototype.slice.call($('.selected td'))
+            var flag = true;
+            for (var i = 1; i < newRowData.length; i++) {
+                if (newRowData[i] !== '') {
+                    var edate = new Date(editisHealthy);
+                    console.log(Date.parse(edate));//不是日期时输出NAN
+                    if (isNaN(editisHealthy) && Date.parse(edate)) {
+                        //是日期/时间
+                        var esid = new Number(editisRisky);
+                        if (editisRisky[0] == '-' || isNaN(esid) == true) {
+                            flag = false;
+                            $.globalMessenger().post({
+                                message: "学号格式错误",//提示信息
+                                type: 'error',//消息类型。error、info、success
+                                hideAfter: 2,//多长时间消失
+                                showCloseButton: true,//是否显示关闭按钮
+                                hideOnNavigate: true //是否隐藏导航
+                            });
+                            break;
+                        }
+                        else {
+                            if (edititem6 != '0' && edititem6 != '1') {
+                                flag = false;
+                                $.globalMessenger().post({
+                                    message: "【今日是否疑似确诊】项格式错误",//提示信息
+                                    type: 'error',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+                                break;
+                            }
+                            else if (edititem7 != '0' && edititem7 != '1') {
+                                flag = false;
+                                $.globalMessenger().post({
+                                    message: "【是否接触确诊】项格式错误",//提示信息
+                                    type: 'error',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+                                break;
+                            }
+                            else if (edititem8 != '0' && edititem8 != '1') {
+                                flag = false;
+                                $.globalMessenger().post({
+                                    message: "【是否接触疑似】项格式错误",//提示信息
+                                    type: 'error',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+                                break;
+                            }
+                            else if (edititem9 != '0' && edititem9 != '1' && edititem9 != '2' && edititem9 != '3' && edititem9 != '4' && edititem9 != '5' && edititem9 != '6' && edititem9 != '7' && edititem9 != '8') {
+                                flag = false;
+                                $.globalMessenger().post({
+                                    message: "【是否在八市停留】项格式错误",//提示信息
+                                    type: 'error',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+                                break;
+                            }
+                        }
+                    } else {
+                        flag = false;
+                        $.globalMessenger().post({
+                            message: "日期格式错误",//提示信息
+                            type: 'error',//消息类型。error、info、success
+                            hideAfter: 2,//多长时间消失
+                            showCloseButton: true,//是否显示关闭按钮
+                            hideOnNavigate: true //是否隐藏导航
+                        });
+                        break;
+                    }
+                } else {
+                    alert('内容不能为空');
+                    flag = false;
+                    $.globalMessenger().post({
+                        message: "操作失败",//提示信息
+                        type: 'error',//消息类型。error、info、success
+                        hideAfter: 2,//多长时间消失
+                        showCloseButton: true,//是否显示关闭按钮
+                        hideOnNavigate: true //是否隐藏导航
+                    });
+                    break;
+                }
+            }
+            if (flag) {
+                var editid = table.rows('.selected').data()[0][0];
+                //var editrow = "{_id: \"" + edituserID + "\",_openid: \"" + editprovinceName + "\",realName: \"" + editcityName + "\",date: \"" + editisHealthy + "\",studentID: \"" + editisRisky + "\",jrsfqzys: \"" + edititem6 + "\",sfjcqz: \"" + edititem7 + "\",sfjcys: \"" + edititem8 + "\"" + "}";
+                var editrow = "{_id: \"" + edituserID + "\",_openid: \"" + editprovinceName + "\",realName: \"" + editcityName + "\",date: \"" + editisHealthy + "\",ZJUID: \"" + editisRisky + "\",jrsfqzys: \"" + edititem6 + "\",sfjcqz: \"" + edititem7 + "\",sfjcys: \"" + edititem8 + "\",jrdqtlqk: \"" + edititem9 + "\"" + "}";
+                var editquery = "db.collection(\"HealthData\").doc('" + editid + "').update({data:" + editrow + "})";//
+                console.log(editquery);
+                $.ajax({
+                    url: "http://localhost:8000/edithealthdata",
+                    type: 'post',
+                    //headers: { "X-CSRFtoken":$.cookie("csrftoken")},
+                    headers: { 'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val() },
+                    data: JSON.stringify({
+                        //'csrfmiddlewaretoken': $("[name='csrfmiddlewaretoken']").val(),
+                        editquery: editquery,
+                        'token': token
+                    }),
+                    contentType: "application/x-www-form-urlencoded",
+                    success: function (data) {
+                        if (data.status == '0') {
+                            alert("请重新登录！");
+                            window.location.href = "login.html";
+                            return false;
+                        }
+                        else {
+                            if (data.errcode == 0) {
+                                table.row('.selected').data(newRowData);
+                                $.globalMessenger().post({
+                                    message: "操作成功",//提示信息
+                                    type: 'success',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+
+                            }
+                            else {
+                                $.globalMessenger().post({
+                                    message: "操作失败",//提示信息
+                                    type: 'error',//消息类型。error、info、success
+                                    hideAfter: 2,//多长时间消失
+                                    showCloseButton: true,//是否显示关闭按钮
+                                    hideOnNavigate: true //是否隐藏导航
+                                });
+                            }
+                        }
+                    }
+                });
+            }
+
+        })
+        $("#cancelEdit").click(function () {
+            console.log('cancelAdd');
+            $("#editHealthDataModal").find('input').val('')
+        })
+        //====edit
+
+        //});
+        function logout() {
+            window.location.href = "login.html";
+            localStorage.value = '';
+        }
+
+    </script>
+    <!-- Custom Js -->
+    <script src="assets/js/custom-scripts.js"></script>
+
+
+</body>
+
+</html>
